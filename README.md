@@ -1,64 +1,52 @@
-# Behavior To Neural Trace
-All of the scripts here essentially try to tease out the relationship between neural activity and observed behaviors utilizing GLM(s).
+# Terminal-NAc Relationship
+These scripts analyze the temporal and causal relationships between terminal and nucleus accumbens (NAc) neural activity using various signal analysis methods. The analyses focus on understanding directional influence, phase synchronization, and temporal dynamics between these brain regions.
+
+It should be noted that while many different analyses were attempted, only the Rayleigh test was utilized.
 
 ## Processes
-**NOTE**: These are not in particular order, but `cluster_and_split.m` needs to run before any other analysis; or alternatively, you could save the results from the script and load it before running other analyses.
+**NOTE**: All scripts load pre-processed neural activity data from different NAc clusters and terminal regions, stored as numpy arrays (`.npy` file extension).
 
-1. `cluster_and_split.m`
-    - **Goal**: Separate neurons by clusters while maintaining matching cell indicies across day 5 and day 1
-    - Heavily borrowed from Dr. Marcus' clustering code
-    - Takes `sortCellPavD1Traces` and `sortCellPavD5Traces` as inputs, which are both of shape (num neurons, trace length)
-        - Importantly, the nuerons are ordered in the same way (i.e. neuron 1 in D5 is the same as neuron 1 in D1)
-    - Each cell corresponds to day 1 and day 5 and contains elements equal to the number of clusters specified
-    - Each cell element represents a cluster, and stores the constituent individual neuron traces
-    - The outputs, named `separated_d5` and `separated_d1` form the basis of all other analyses
+1. `preliminary_rayleigh.py`
+    - **Goal**: Implement functions for Rayleigh test analysis of phase differences between neural signals
+    - Contains helper functions for calculating phase differences using Hilbert transform
+    - Implements Rayleigh statistics calculation (mean resultant length and angle)
+    - Provides polar plotting functionality for visualizing phase relationships
+    - Foundation script for phase analysis used in other notebooks
 
-2. `GLM.m`
-    - **Goal**: Fit GLM on behaviors and mean cluster activities and get their beta coefficients and p-values
-    - Takes above `separated_d5` and `separated_d1` and reads two excel files of behaviors. Behaviors should be represented as a 2D matrix, where each row represents a behavior
-        - In our case, we used a cue aligned behavior density, but an average could be used as well
-    - A GLM is fit to each cluster, saving the beta coefficients and p-values
-    - No output, I manually copied over the data into an Excel file
+2. `rayleigh_test.ipynb`
+    - **Goal**: Perform Rayleigh test to assess phase locking between terminal and NAc signals
+    - Demonstrates phase difference analysis using synthetic signals
+    - Applies phase analysis to real neural data from terminal and NAc clusters
+    - Calculates mean resultant length and phase differences in degrees and milliseconds
+    - Includes frequency domain analysis to identify significant frequency components
 
-3. `GLM_Individual_Clusters.m`
-    - **Goal**: Conduct same analysis as `GLM.m` but on individual neuron level
-    - Takes same input as `GLM.m`
-    - A GLM is fit to each neuron in a cluster, saving the beta coefficients and p-values
-    - The script outputs the data as two Excel files (D5 and D1)
+3. `phase_sync.ipynb`
+    - **Goal**: Quantify phase synchronization between terminal and NAc activity using PSI (Phase Synchronization Index)
+    - Applies bandpass filtering to focus on specific frequency ranges (0.01-4.92 Hz)
+    - Calculates PSI values for each NAc cluster relative to terminal activity
+    - Uses surrogate data analysis to determine statistical significance
+    - Provides visualization of filtered signals and synchronization results
 
-4. `GLM_Individual_residuals.m`
-    - **Goal**: Plot residuals of GLMs fit to individual neurons
-    - Takes same input as `GLM.m`
-    - Similarly to `GLM_Individual_Clusters.m`, fits a GLM to individual neurons, then plots the distribution of **standardized** residuals for each cluster
-    - Saves the plot as a SVG file
+4. `granger_causality.ipynb`
+    - **Goal**: Assess directional causal relationships between terminal and NAc clusters using Granger causality
+    - Performs stationarity testing using KPSS and ADF tests
+    - Implements Vector Autoregression (VAR) models for time series analysis
+    - Tests for Granger causality to determine if one signal predicts another
+    - Includes lag plot analysis and data preprocessing steps
 
-5. `new_t_summary.m`
-    - **Goal**: Plot t-values of GLMs fit to individual neurons; effectively treating t-values as effect size
-    - Takes same input as `GLM.m`
-    - Performs the same operations as `GLM_Individual_residuals.m`, but only saves the t-values instead of residuals
-    - Plots the t-values by cluster and saves it as a SVG file
+5. `transfer_entropy.ipynb`
+    - **Goal**: Measure information transfer between terminal and NAc using transfer entropy analysis
+    - Applies bandpass filtering to focus on low-frequency components (0.01-0.5 Hz)
+    - Calculates bidirectional transfer entropy (terminal→NAc and NAc→terminal)
+    - Uses surrogate data permutation testing for statistical validation
+    - Provides quantitative measures of information flow direction and strength
 
-6. `GLM_num_encoding.m`
-    - **Goal**: Print how many GLMs fit to individual neurons encode behavior (based on a beta coefficient threshold)
-    - Takes same input as `GLM.m`
-    - Performs the same operations as `GLM_Individual_residuals.m`, but calculates the number of neurons with beta coefficients above the threshold
-    - Prints the results (no file ouput)
+6. `individual_traces_rayleigh.ipynb`
+    - **Goal**: Apply Rayleigh analysis to individual neuron traces rather than cluster averages
+    - Extends the phase analysis approach to single-cell level data
+    - Allows for assessment of phase relationships at finer temporal resolution
 
-7. `GLM_drop_behav.m`
-    - **Goal**: Print the beta coefficients and p-values of a GLM with dropped behavior
-    - Takes same input as `GLM.m`
-    - Performs the same operations as `GLM_Individual_residuals.m`, but drops the behavior(s) specified
-    - Prints the results (no file output)
-
-8. `GLM_shift_validation.m`
-    - **Goal**: Print beta coefficients and p-values of a GLM after performing varying amounts of circular shifts
-    - Takes same input as `GLM.m`
-    - Performs the same operations as `GLM.m`, but shifts the behaviors for each specified amount before fitting the GLM
-    - Results saved as variable (no outputs)
-
-9. `GLM_drop_neurons.m`
-    - **Goal**: Print number of encoding neurons GLM after dropping varying percentages (up to 75%) from each cluster
-    - Takes same input as `GLM.m`
-    - Drops 0, 25, 50, and 75% of neurons (neurons selected randomly) then fits GLM to resulting population activity
-    - Prints results (no file ouput)
-    - *Fun Fact*: You can tell this analysis preceeded `GLM_num_encoding.m` and was unused (cuz the code sucks, more than usual), but the idea was good in theory
+7. `robust_rayleigh.ipynb`
+    - **Goal**: Implement robust versions of Rayleigh statistical tests
+    - Provides alternative statistical approaches for phase analysis
+    - Includes methods to handle outliers and non-uniform circular distributions

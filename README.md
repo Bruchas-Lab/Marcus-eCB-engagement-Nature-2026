@@ -1,52 +1,34 @@
-# Terminal-NAc Relationship
-These scripts analyze the temporal and causal relationships between terminal and nucleus accumbens (NAc) neural activity using various signal analysis methods. The analyses focus on understanding directional influence, phase synchronization, and temporal dynamics between these brain regions.
-
-It should be noted that while many different analyses were attempted, only the Rayleigh test was utilized.
+# SVM Cluster Validation
+These scripts validate the existence of clusters in a higher dimensional space using Support Vector Machine (SVM) classification. The analyses take coordinate data from principal component analysis and apply SVM models to determine cluster separability.
 
 ## Processes
-**NOTE**: All scripts load pre-processed neural activity data from different NAc clusters and terminal regions, stored as numpy arrays (`.npy` file extension).
+**NOTE**: the coordinate values and corresponding labels were generated in Matlab and imported as Excel files.
 
-1. `preliminary_rayleigh.py`
-    - **Goal**: Implement functions for Rayleigh test analysis of phase differences between neural signals
-    - Contains helper functions for calculating phase differences using Hilbert transform
-    - Implements Rayleigh statistics calculation (mean resultant length and angle)
-    - Provides polar plotting functionality for visualizing phase relationships
-    - Foundation script for phase analysis used in other notebooks
+1. `cluster_3d_visualization.py`
+    - **Goal**: Create 3D visualizations of cluster data using the first three principal components
+    - Loads coordinate data from day 5 and day 1, along with cluster labels
+    - Applies StandardScaler to normalize the data before plotting
+    - Creates scatter plots with different colors for each cluster
+    - Outputs basic statistics about the number of data points and clusters
 
-2. `rayleigh_test.ipynb`
-    - **Goal**: Perform Rayleigh test to assess phase locking between terminal and NAc signals
-    - Demonstrates phase difference analysis using synthetic signals
-    - Applies phase analysis to real neural data from terminal and NAc clusters
-    - Calculates mean resultant length and phase differences in degrees and milliseconds
-    - Includes frequency domain analysis to identify significant frequency components
+2. `svm_decision_boundary.py`
+    - **Goal**: Visualize SVM decision boundaries in 3D space
+    - Loads pre-trained SVM model and coordinate data
+    - Creates mesh grids to visualize decision boundaries across 3D space
+    - Plots both the original data points and the decision boundary contours
+    - Demonstrates how the SVM separates different clusters in the feature space
 
-3. `phase_sync.ipynb`
-    - **Goal**: Quantify phase synchronization between terminal and NAc activity using PSI (Phase Synchronization Index)
-    - Applies bandpass filtering to focus on specific frequency ranges (0.01-4.92 Hz)
-    - Calculates PSI values for each NAc cluster relative to terminal activity
-    - Uses surrogate data analysis to determine statistical significance
-    - Provides visualization of filtered signals and synchronization results
+3. `multi_class_svm.ipynb` (Main script)
+    - **Goal**: Train and evaluate multi-class SVM models on cluster data
+    - Jupyter notebook for interactive analysis of SVM performance
+    - Includes model training, validation, and performance metrics
 
-4. `granger_causality.ipynb`
-    - **Goal**: Assess directional causal relationships between terminal and NAc clusters using Granger causality
-    - Performs stationarity testing using KPSS and ADF tests
-    - Implements Vector Autoregression (VAR) models for time series analysis
-    - Tests for Granger causality to determine if one signal predicts another
-    - Includes lag plot analysis and data preprocessing steps
+4. `d1_multi_class_svm.ipynb`
+    - **Goal**: Perform multi-class SVM analysis specifically on day 1 data
+    - Similar to `multi_class_svm.ipynb` but focused on day 1 dataset
+    - Allows comparison of cluster separability between different time points
 
-5. `transfer_entropy.ipynb`
-    - **Goal**: Measure information transfer between terminal and NAc using transfer entropy analysis
-    - Applies bandpass filtering to focus on low-frequency components (0.01-0.5 Hz)
-    - Calculates bidirectional transfer entropy (terminal→NAc and NAc→terminal)
-    - Uses surrogate data permutation testing for statistical validation
-    - Provides quantitative measures of information flow direction and strength
-
-6. `individual_traces_rayleigh.ipynb`
-    - **Goal**: Apply Rayleigh analysis to individual neuron traces rather than cluster averages
-    - Extends the phase analysis approach to single-cell level data
-    - Allows for assessment of phase relationships at finer temporal resolution
-
-7. `robust_rayleigh.ipynb`
-    - **Goal**: Implement robust versions of Rayleigh statistical tests
-    - Provides alternative statistical approaches for phase analysis
-    - Includes methods to handle outliers and non-uniform circular distributions
+5. `plot_decision_boundary.ipynb`
+    - **Goal**: Interactive visualization of SVM decision boundaries
+    - Jupyter notebook for exploring different aspects of the decision boundary
+    - Provides detailed plots and analysis of how the SVM classifies the data

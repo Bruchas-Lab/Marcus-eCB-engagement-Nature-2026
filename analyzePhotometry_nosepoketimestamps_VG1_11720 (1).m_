@@ -1,0 +1,1360 @@
+% Code written by Christian Pedersen
+% Michael Bruchas Lab - UW
+
+%% Code purpose
+
+% This code is designed to take a .mat file (from extraction code) and a
+% .txt file of time stamps and generate peri-event measurements of average
+% photometry activity.
+
+% This code is designed to align photometry traces with specified times of
+% behavioral events. Ultimately, a 2D matrix (LickTrig) is generated where
+% each row corresponds to fluorescence intensity over a time period surrounding each
+% behavioral event. Rows correspond to events, Columns correspond time
+
+%% Reset MatLab workspace - clears all variables and the command window
+
+clear all;  % clear all variables
+close all;  % close all open graphs
+clc   % clear command window
+
+
+%%
+
+k = 1; % session counter
+
+for sess = [88 89]  % this is called a "for loop", google this
+
+    
+%     if sess == 1   % this is called an "if statement", google this
+%     photoname = 'C89_M1_051418_drug.mat';   % specify .mat file name
+%     pokeTimes1 = dlmread('89-1_scoretimes.txt'); % specify .txt file name
+%     end
+ 
+
+%%%%%%%%%% Change These to Your Session %%%%%%%%
+%templicks = dlmread('162_RP_PAV_rew.txt');
+%photoname = '162_RP_PAV_71519.mat';
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+    
+    if sess == 1
+        templicks = dlmread('VG1_m1_FR1-1_rew.txt');
+        photoname = 'VG1_m1_FR1-1.mat';
+        delay1 = +13;    
+    end
+    
+    if sess == 2
+        templicks = dlmread('VG1_M2_FR1-1_rew.txt');
+        photoname = 'VG1_M2_FR1-1.mat'; 
+        delay1 = +15;
+    end
+
+    if sess == 3
+        templicks = dlmread('vg1_M3_FR1-1_rew.txt');
+        photoname = 'vg1_M3_FR1-1.mat'; 
+        delay1 = +13;
+    end
+
+    if sess == 4
+        templicks = dlmread('vg1_M4_FR1-1_rew.txt');
+        photoname = 'vg1_M4_FR1-1.mat'; 
+        delay1 = +15;
+    end
+    
+    if sess == 5
+        templicks = dlmread('VG1_m1_FR1-1_INP.txt');
+        photoname = 'VG1_m1_FR1-1.mat';
+        delay1 = +20;    
+    end
+    
+    if sess == 6
+        templicks = dlmread('VG1_M2_FR1-1_INP.txt');
+        photoname = 'VG1_M2_FR1-1.mat'; 
+        delay1 = +22;
+    end
+
+    if sess == 7
+        templicks = dlmread('vg1_M3_FR1-1_INP.txt');
+        photoname = 'vg1_M3_FR1-1.mat'; 
+        delay1 = +20;
+    end
+
+    if sess == 8
+        templicks = dlmread('vg1_M4_FR1-1_INP.txt');
+        photoname = 'vg1_M4_FR1-1.mat'; 
+        delay1 = +22;
+    end
+    
+    if sess == 9
+        templicks = dlmread('VG1_M2_FR1-2_rew.txt');
+        photoname = 'VG1_M2_FR1-2.mat'; 
+        delay1 = +15;
+    end
+
+    if sess == 10
+        templicks = dlmread('vg1_M3_FR1-2_rew.txt');
+        photoname = 'vg1_M3_FR1-2.mat'; 
+        delay1 = +13;
+    end
+
+    if sess == 11
+        templicks = dlmread('vg1_M4_FR1-2_rew.txt');
+        photoname = 'vg1_M4_FR1-2.mat'; 
+        delay1 = +15;
+    end
+    
+    if sess == 12
+        templicks = dlmread('VG1_M2_FR1-2_INP.txt');
+        photoname = 'VG1_M2_FR1-2.mat'; 
+        delay1 = +22;
+    end
+
+    if sess == 13
+        templicks = dlmread('vg1_M3_FR1-2_INP.txt');
+        photoname = 'vg1_M3_FR1-2.mat'; 
+        delay1 = +20;
+    end
+
+    if sess == 14
+        templicks = dlmread('vg1_M4_FR1-2_INP.txt');
+        photoname = 'vg1_M4_FR1-2.mat'; 
+        delay1 = +22;
+    end
+    
+    if sess == 15
+        templicks = dlmread('VG1_M2_FR1-3_rew.txt');
+        photoname = 'VG1_M2_FR1-3.mat'; 
+        delay1 = +13;
+    end
+
+    if sess == 16
+        templicks = dlmread('vg1_M3_FR1-3_rew.txt');
+        photoname = 'vg1_M3_FR1-3.mat'; 
+        delay1 = +12;
+    end
+
+    if sess == 17
+        templicks = dlmread('vg1_M4_FR1-3_rew.txt');
+        photoname = 'vg1_M4_FR1-3.mat'; 
+        delay1 = +15;
+    end
+    
+    if sess == 18
+        templicks = dlmread('162_NP_FR1D3_rew.txt');
+        photoname = '162_NP_FR1D3_71819.mat'; 
+        delay1 = -29;
+    end
+    
+    if sess == 19
+        templicks = dlmread('163_NP_FR1D3_rew.txt');
+        photoname = '163_NP_FR1D3_71819.mat';
+        delay1 = -29;
+    end
+
+    if sess == 20
+        templicks = dlmread('163_BP_FR1D3_rew.txt');
+        photoname = '163_BP_FR1D3_71819.mat';
+        delay1 = -29;
+    end
+    
+    if sess == 21
+        templicks = dlmread('VG1_M2_FR1-3_INP.txt');
+        photoname = 'VG1_M2_FR1-3.mat'; 
+        delay1 = +20;
+    end
+
+    if sess == 22
+        templicks = dlmread('vg1_M3_FR1-3_INP.txt');
+        photoname = 'vg1_M3_FR1-3.mat'; 
+        delay1 = +19;
+    end
+
+    if sess == 23
+        templicks = dlmread('vg1_M4_FR1-3_INP.txt');
+        photoname = 'vg1_M4_FR1-3.mat'; 
+        delay1 = +20;
+    end
+    
+    if sess == 24
+        templicks = dlmread('162_NP_FR1D3_Inp.txt');
+        photoname = '162_NP_FR1D3_71819.mat'; 
+        delay1 = -22;
+    end
+    
+    if sess == 25
+        templicks = dlmread('163_NP_FR1D3_Inp.txt');
+        photoname = '163_NP_FR1D3_71819.mat';
+        delay1 = -22;
+    end
+
+    if sess == 26
+        templicks = dlmread('163_BP_FR1D3_Inp.txt');
+        photoname = '163_BP_FR1D3_71819.mat';
+        delay1 = -22;
+    end
+    
+    if sess == 27
+        templicks = dlmread('VG1_M2_FR1-4_rew.txt');
+        photoname = 'VG1_M2_FR1-4.mat'; 
+        delay1 = +13;
+    end
+    
+    if sess == 28
+        templicks = dlmread('vg1_M3_FR1-4_rew.txt');
+        photoname = 'vg1_M3_FR1-4.mat'; 
+        delay1 = +12;
+    end
+    
+    if sess == 29
+        templicks = dlmread('vg1_M4_FR1-4_rew.txt');
+        photoname = 'vg1_M4_FR1-4.mat'; 
+        delay1 = +18;
+    end
+    
+    if sess == 30
+        templicks = dlmread('VG1_M2_FR1-4_INP.txt');
+        photoname = 'VG1_M2_FR1-4.mat'; 
+        delay1 = +20;
+    end
+    
+    if sess == 31
+        templicks = dlmread('vg1_M3_FR1-4_INP.txt');
+        photoname = 'vg1_M3_FR1-4.mat'; 
+        delay1 = +19;
+    end
+    
+    if sess == 32
+        templicks = dlmread('vg1_M4_FR1-4_INP.txt');
+        photoname = 'vg1_M4_FR1-4.mat'; 
+        delay1 = +25;
+    end
+    
+    if sess == 33
+        templicks = dlmread('VG1_M2_FR1-5_rew.txt');
+        photoname = 'VG1_M2_FR1-5.mat'; 
+        delay1 = +16;
+    end
+
+    if sess == 34
+        templicks = dlmread('vg1_M3_FR1-5_rew.txt');
+        photoname = 'vg1_M3_FR1-5.mat'; 
+        delay1 = +15;
+    end
+    
+    if sess == 35
+        templicks = dlmread('vg1_M4_FR1-5_rew.txt');
+        photoname = 'vg1_M4_FR1-5.mat'; 
+        delay1 = +12;
+    end
+    
+    if sess == 36
+        templicks = dlmread('VG1_M2_FR1-5_INP.txt');
+        photoname = 'VG1_M2_FR1-5.mat'; 
+        delay1 = +23;
+    end
+
+    if sess == 37
+        templicks = dlmread('vg1_M3_FR1-5_INP.txt');
+        photoname = 'vg1_M3_FR1-5.mat'; 
+        delay1 = +22;
+    end
+    
+    if sess == 38
+        templicks = dlmread('vg1_M4_FR1-5_INP.txt');
+        photoname = 'vg1_M4_FR1-5.mat'; 
+        delay1 = +25;
+    end
+    
+    if sess == 39
+        templicks = dlmread('VG1_M2_FR1-6_rew.txt');
+        photoname = 'VG1_M2_FR1-6.mat'; 
+        delay1 = +10;
+    end
+
+    if sess == 40
+        templicks = dlmread('vg1_M3_FR1-6_rew.txt');
+        photoname = 'vg1_M3_FR1-6.mat'; 
+        delay1 = +12;
+    end
+    
+    if sess == 41
+        templicks = dlmread('vg1_M4_FR1-6_rew.txt');
+        photoname = 'vg1_M4_FR1-6.mat'; 
+        delay1 = +12;
+    end
+    
+    if sess == 42
+        templicks = dlmread('VG1_M2_FR1-6_INP.txt');
+        photoname = 'VG1_M2_FR1-6.mat'; 
+        delay1 = +17;
+    end
+
+    if sess == 43
+        templicks = dlmread('vg1_M3_FR1-6_INP.txt');
+        photoname = 'vg1_M3_FR1-6.mat'; 
+        delay1 = +19;
+    end
+    
+    if sess == 44
+        templicks = dlmread('vg1_M4_FR1-6_INP.txt');
+        photoname = 'vg1_M4_FR1-6.mat'; 
+        delay1 = +19;
+    end
+    
+    if sess == 45
+        templicks = dlmread('VG1_M2_FR1-7_rew.txt');
+        photoname = 'VG1_M2_FR1-7.mat'; 
+        delay1 = +15;
+    end
+
+    if sess == 46
+        templicks = dlmread('vg1_M3_FR1-7_rew.txt');
+        photoname = 'vg1_M3_FR1-7.mat'; 
+        delay1 = +10;
+    end
+    
+    if sess == 47
+        templicks = dlmread('vg1_M4_FR1-7_rew.txt');
+        photoname = 'vg1_M4_FR1-7.mat'; 
+        delay1 = +11;
+    end
+    
+    if sess == 48
+        templicks = dlmread('VG1_M2_FR1-7_INP.txt');
+        photoname = 'VG1_M2_FR1-7.mat'; 
+        delay1 = +22;
+    end
+
+    if sess == 49
+        templicks = dlmread('vg1_M3_FR1-7_INP.txt');
+        photoname = 'vg1_M3_FR1-7.mat'; 
+        delay1 = +17;
+    end
+    
+    if sess == 50
+        templicks = dlmread('vg1_M4_FR1-7_INP.txt');
+        photoname = 'vg1_M4_FR1-7.mat'; 
+        delay1 = +19;
+    end
+    
+    if sess == 51
+        templicks = dlmread('VG1_M2_FR1-REV1_ANP.txt');
+        photoname = 'VG1_M2_FR1-REV1.mat'; 
+        delay1 = +22;
+    end
+
+    if sess == 52
+        templicks = dlmread('vg1_M3_FR1-REV1_rew.txt');
+        photoname = 'vg1_M3_FR1-REV1.mat'; 
+        delay1 = +12;
+    end
+    
+    if sess == 53
+        templicks = dlmread('vg1_M4_FR1-REV1_rew.txt');
+        photoname = 'vg1_M4_FR1-REV1.mat'; 
+        delay1 = +13;
+    end
+    
+    if sess == 54
+        templicks = dlmread('VG1_M2_FR1-REV1_INP.txt');
+        photoname = 'VG1_M2_FR1-REV1.mat'; 
+        delay1 = +19;
+    end
+
+    if sess == 55
+        templicks = dlmread('vg1_M3_FR1-REV1_INP.txt');
+        photoname = 'vg1_M3_FR1-REV1.mat'; 
+        delay1 = +21;
+    end
+    
+    if sess == 56
+        templicks = dlmread('vg1_M4_FR1-REV1_INP.txt');
+        photoname = 'vg1_M4_FR1-REV1.mat'; 
+        delay1 = +23;
+    end
+    
+    if sess == 57
+        templicks = dlmread('VG1_M2_FR1-REV2_rew.txt');
+        photoname = 'VG1_M2_FR1-REV2.mat'; 
+        delay1 = +15;
+    end
+
+    if sess == 58
+        templicks = dlmread('vg1_M3_FR1-REV2_rew.txt');
+        photoname = 'vg1_M3_FR1-REV2.mat'; 
+        delay1 = +10;
+    end
+    
+    if sess == 59
+        templicks = dlmread('vg1_M4_FR1-REV2_rew.txt');
+        photoname = 'vg1_M4_FR1-REV2.mat'; 
+        delay1 = +12;
+    end
+    
+    if sess == 60
+        templicks = dlmread('VG1_M2_FR1-REV2_INP.txt');
+        photoname = 'VG1_M2_FR1-REV2.mat'; 
+        delay1 = +22;
+    end
+
+    if sess == 61
+        templicks = dlmread('vg1_M3_FR1-REV2_INP.txt');
+        photoname = 'vg1_M3_FR1-REV2.mat'; 
+        delay1 = +17;
+    end
+    
+    if sess == 62
+        templicks = dlmread('vg1_M4_FR1-REV2_INP.txt');
+        photoname = 'vg1_M4_FR1-REV2.mat'; 
+        delay1 = +19;
+    end
+    
+    if sess == 63
+        templicks = dlmread('VG1_M2_FR1-REV3_rew.txt');
+        photoname = 'VG1_M2_FR1-REV3.mat'; 
+        delay1 = +15;
+    end
+
+    if sess == 64
+        templicks = dlmread('vg1_M3_FR1-REV3_rew.txt');
+        photoname = 'vg1_M3_FR1-REV3.mat'; 
+        delay1 = +12;
+    end
+    
+    if sess == 65
+        templicks = dlmread('vg1_M4_FR1-REV3_rew.txt');
+        photoname = 'vg1_M4_FR1-REV3.mat'; 
+        delay1 = +14;
+    end
+    
+    if sess == 66
+        templicks = dlmread('VG1_M2_FR1-REV3_INP.txt');
+        photoname = 'VG1_M2_FR1-REV3.mat'; 
+        delay1 = +22;
+    end
+
+    if sess == 67
+        templicks = dlmread('vg1_M3_FR1-REV3_INP.txt');
+        photoname = 'vg1_M3_FR1-REV3.mat'; 
+        delay1 = +19;
+    end
+    
+    if sess == 68
+        templicks = dlmread('vg1_M4_FR1-REV3_INP.txt');
+        photoname = 'vg1_M4_FR1-REV3.mat'; 
+        delay1 = +19;
+    end
+    
+    if sess == 69
+        templicks = dlmread('VG1_M2_FR1-REV4_rew.txt');
+        photoname = 'VG1_M2_FR1-REV4.mat'; 
+        delay1 = +15;
+    end
+
+    if sess == 70
+        templicks = dlmread('vg1_M3_FR1-REV4_rew.txt');
+        photoname = 'vg1_M3_FR1-REV4.mat'; 
+        delay1 = +12;
+    end
+    
+    if sess == 71
+        templicks = dlmread('vg1_M4_FR1-REV4_rew.txt');
+        photoname = 'vg1_M4_FR1-REV4.mat'; 
+        delay1 = +14;
+    end
+    
+    if sess == 72
+        templicks = dlmread('VG1_M2_FR1-REV4_INP.txt');
+        photoname = 'VG1_M2_FR1-REV4.mat'; 
+        delay1 = +22;
+    end
+
+    if sess == 73
+        templicks = dlmread('vg1_M3_FR1-REV4_INP.txt');
+        photoname = 'vg1_M3_FR1-REV4.mat'; 
+        delay1 = +17;
+    end
+    
+    if sess == 74
+        templicks = dlmread('vg1_M4_FR1-REV4_INP.txt');
+        photoname = 'vg1_M4_FR1-REV4.mat'; 
+        delay1 = +19;
+    end
+    
+    if sess == 75
+        templicks = dlmread('VG1_M2_FR1-REV5_rew.txt');
+        photoname = 'VG1_M2_FR1-REV5.mat'; 
+        delay1 = +15;
+    end
+
+    if sess == 76
+        templicks = dlmread('vg1_M3_FR1-REV5_rew.txt');
+        photoname = 'vg1_M3_FR1-REV5.mat'; 
+        delay1 = +12;
+    end
+    
+    if sess == 77
+        templicks = dlmread('vg1_M4_FR1-REV5_rew.txt');
+        photoname = 'vg1_M4_FR1-REV5.mat'; 
+        delay1 = +10;
+    end
+    
+    if sess == 78
+        templicks = dlmread('VG1_M2_FR1-REV5_INP.txt');
+        photoname = 'VG1_M2_FR1-REV5.mat'; 
+        delay1 = +22;
+    end
+
+    if sess == 79
+        templicks = dlmread('vg1_M3_FR1-REV5_INP.txt');
+        photoname = 'vg1_M3_FR1-REV5.mat'; 
+        delay1 = +19;
+    end
+    
+    if sess == 80
+        templicks = dlmread('vg1_M4_FR1-REV5_INP.txt');
+        photoname = 'vg1_M4_FR1-REV5.mat'; 
+        delay1 = +20;
+    end
+    
+    if sess == 81
+        templicks = dlmread('VG1_M2_FR1-REV6_rew.txt');
+        photoname = 'VG1_M2_FR1-REV6.mat'; 
+        delay1 = +15;
+    end
+
+    if sess == 82
+        templicks = dlmread('vg1_M3_FR1-REV6_rew.txt');
+        photoname = 'vg1_M3_FR1-REV6.mat'; 
+        delay1 = +12;
+    end
+    
+    if sess == 83
+        templicks = dlmread('vg1_M4_FR1-REV6_rew.txt');
+        photoname = 'vg1_M4_FR1-REV6.mat'; 
+        delay1 = +13;
+    end
+    
+    if sess == 84
+        templicks = dlmread('VG1_M2_FR1-REV6_INP.txt');
+        photoname = 'VG1_M2_FR1-REV6.mat'; 
+        delay1 = +22;
+    end
+
+    if sess == 85
+        templicks = dlmread('vg1_M3_FR1-REV6_INP.txt');
+        photoname = 'vg1_M3_FR1-REV6.mat'; 
+        delay1 = +19;
+    end
+    
+    if sess == 86
+        templicks = dlmread('vg1_M4_FR1-REV6_INP.txt');
+        photoname = 'vg1_M4_FR1-REV6.mat'; 
+        delay1 = +20;
+    end
+    
+    if sess == 87
+        templicks = dlmread('VG1_M2_FR1-PROB1_rew.txt');
+        photoname = 'VG1_M2_FR1-PROB1.mat'; 
+        delay1 = +15;
+    end
+
+    if sess == 88
+        templicks = dlmread('vg1_M3_FR1-PROB1_rew.txt');
+        photoname = 'vg1_M3_FR1-PROB1.mat'; 
+        delay1 = +12;
+    end
+    
+    if sess == 89
+        templicks = dlmread('vg1_M4_FR1-PROB1_rew.txt');
+        photoname = 'vg1_M4_FR1-PROB1.mat'; 
+        delay1 = +13;
+    end
+    
+    if sess == 90
+        templicks = dlmread('VG1_M2_FR1-PROB1_NP.txt');
+        photoname = 'VG1_M2_FR1-PROB1.mat'; 
+        delay1 = +22;
+    end
+
+    if sess == 91
+        templicks = dlmread('vg1_M3_FR1-PROB1_NP.txt');
+        photoname = 'vg1_M3_FR1-PROB1.mat'; 
+        delay1 = +19;
+    end
+    
+    if sess == 92
+        templicks = dlmread('vg1_M4_FR1-PROB1_NP.txt');
+        photoname = 'vg1_M4_FR1-PROB1.mat'; 
+        delay1 = +20;
+    end
+    
+    if sess == 93
+        templicks = dlmread('VG1_M2_FR1-PROB2_rew.txt');
+        photoname = 'VG1_M2_FR1-PROB2.mat'; 
+        delay1 = +15;
+    end
+
+    if sess == 94
+        templicks = dlmread('vg1_M3_FR1-PROB2_rew.txt');
+        photoname = 'vg1_M3_FR1-PROB2.mat'; 
+        delay1 = +12;
+    end
+    
+    if sess == 95
+        templicks = dlmread('vg1_M4_FR1-PROB2_rew.txt');
+        photoname = 'vg1_M4_FR1-PROB2.mat'; 
+        delay1 = +13;
+    end
+    
+    if sess == 96
+        templicks = dlmread('VG1_M2_FR1-PROB2_NP.txt');
+        photoname = 'VG1_M2_FR1-PROB2.mat'; 
+        delay1 = +22;
+    end
+
+    if sess == 97
+        templicks = dlmread('vg1_M3_FR1-PROB2_NP.txt');
+        photoname = 'vg1_M3_FR1-PROB2.mat'; 
+        delay1 = +19;
+    end
+    
+    if sess == 98
+        templicks = dlmread('vg1_M4_FR1-PROB2_NP.txt');
+        photoname = 'vg1_M4_FR1-PROB2.mat'; 
+        delay1 = +20;
+    end
+    
+    if sess == 99
+        templicks = dlmread('VG1_M2_FR1-N1_rew.txt');
+        photoname = 'VG1_M2_FR1-N1.mat'; 
+        delay1 = +15;
+    end
+
+    if sess == 100
+        templicks = dlmread('vg1_M3_FR1-N1_rew.txt');
+        photoname = 'vg1_M3_FR1-N1.mat'; 
+        delay1 = +12;
+    end
+    
+    if sess == 101
+        templicks = dlmread('vg1_M4_FR1-N1_rew.txt');
+        photoname = 'vg1_M4_FR1-N1.mat'; 
+        delay1 = +13;
+    end
+    
+    if sess == 102
+        templicks = dlmread('VG1_M2_FR1-N2_rew.txt');
+        photoname = 'VG1_M2_FR1-N2.mat'; 
+        delay1 = +15;
+    end
+
+    if sess == 103
+        templicks = dlmread('vg1_M3_FR1-N2_rew.txt');
+        photoname = 'vg1_M3_FR1-N2.mat'; 
+        delay1 = +12;
+    end
+    
+    if sess == 104
+        templicks = dlmread('vg1_M4_FR1-N2_rew.txt');
+        photoname = 'vg1_M4_FR1-N2.mat'; 
+        delay1 = +13;
+    end
+    
+    if sess == 105
+        templicks = dlmread('vg1_M3_FR1-PROB1_unrewNP.txt');
+        photoname = 'vg1_M3_FR1-PROB1.mat'; 
+        delay1 = 0;
+    end
+    
+    if sess == 106
+        templicks = dlmread('vg1_M4_FR1-PROB1_unrewNP.txt');
+        photoname = 'vg1_M4_FR1-PROB1.mat'; 
+        delay1 = 0;
+    end
+    
+    if sess == 107
+        templicks = dlmread('VG1_M3_FR1-N3_rew.txt');
+        photoname = 'VG1_M3_FR1-N3.mat'; 
+        delay1 = +12;
+    end
+
+    if sess == 108
+        templicks = dlmread('vg1_M4_FR1-N3_rew.txt');
+        photoname = 'vg1_M4_FR1-N3.mat'; 
+        delay1 = +13;
+    end
+    
+    if sess == 109
+        templicks = dlmread('VG1_M3_FR1-N4_rew.txt');
+        photoname = 'VG1_M3_FR1-N4.mat'; 
+        delay1 = +11;
+    end
+
+    if sess == 110
+        templicks = dlmread('vg1_M4_FR1-N4_rew.txt');
+        photoname = 'vg1_M4_FR1-N4.mat'; 
+        delay1 = +13;
+    end
+    
+    if sess == 111
+        templicks = dlmread('VG1_M3_FR1-NS_rew.txt');
+        photoname = 'VG1_M3_FR1-NS.mat'; 
+        delay1 = +13;
+    end
+
+    if sess == 112
+        templicks = dlmread('vg1_M4_FR1-NS_rew.txt');
+        photoname = 'vg1_M4_FR1-NS.mat'; 
+        delay1 = +13;
+    end
+
+    if sess == 113
+        templicks = dlmread('VG1_M3_FR1-ND_rew.txt');
+        photoname = 'VG1_M3_FR1-ND.mat'; 
+        delay1 = +14;
+    end
+
+    if sess == 114
+        templicks = dlmread('vg1_M4_FR1-ND_rew.txt');
+        photoname = 'vg1_M4_FR1-ND.mat'; 
+        delay1 = +14;
+    end
+    
+    if sess == 115
+        templicks = dlmread('vg1_M3_FR1-E2_NP.txt');
+        photoname = 'vg1_M3_FR1-E2.mat'; 
+        delay1 = +19;
+    end
+    
+    if sess == 116
+        templicks = dlmread('vg1_M4_FR1-E1_NP.txt');
+        photoname = 'vg1_M4_FR1-E1.mat'; 
+        delay1 = +19;
+    end
+    
+    if sess == 117
+        templicks = dlmread('162_NP_FR1EXT1_np.txt');
+        photoname = '162_NP_FR1EXT1_72419.mat';
+        delay1 = -22;
+    end
+    
+    if sess == 118
+        templicks = dlmread('163_NP_FR1EXT1_np.txt');
+        photoname = '163_NP_FR1EXT1_72419.mat'; 
+        delay1 = -22;
+    end
+
+    if sess == 119
+        templicks = dlmread('163_BP_FR1EXT1_np.txt');
+        photoname = '163_BP_FR1EXT1_72419.mat';
+        delay1 = -22;
+    end
+    
+    if sess == 120
+        templicks = dlmread('vg1_M3_FR1-E3_NP.txt');
+        photoname = 'vg1_M3_FR1-E3.mat'; 
+        delay1 = +20;
+    end
+    
+    if sess == 121
+        templicks = dlmread('vg1_M4_FR1-E3_NP.txt');
+        photoname = 'vg1_M4_FR1-E3.mat'; 
+        delay1 = +20;
+    end
+    
+    if sess == 122
+        templicks = dlmread('162_NP_FR1EXT2_np.txt');
+        photoname = '162_NP_FR1EXT2_72519.mat';
+        delay1 = -22;
+    end
+    
+    if sess == 123
+        templicks = dlmread('163_NP_FR1EXT2_np.txt');
+        photoname = '163_NP_FR1EXT2_72519.mat'; 
+        delay1 = -22;
+    end
+
+    if sess == 124
+        templicks = dlmread('163_BP_FR1EXT2_np.txt');
+        photoname = '163_BP_FR1EXT2_72519.mat';
+        delay1 = -22;
+    end
+    
+    if sess == 125
+        templicks = dlmread('vg1_M3_FR1-E4_NP.txt');
+        photoname = 'vg1_M3_FR1-E4.mat'; 
+        delay1 = +20;
+    end
+    
+    if sess == 126
+        templicks = dlmread('vg1_M4_FR1-E4_NP.txt');
+        photoname = 'vg1_M4_FR1-E4.mat'; 
+        delay1 = +20;
+    end
+    
+    if sess == 127
+        templicks = dlmread('162_NP_FR1EXT3_np.txt');
+        photoname = '162_NP_FR1EXT3_72619.mat';
+        delay = -22;
+    end
+    
+    if sess == 128
+        templicks = dlmread('163_NP_FR1EXT3_np.txt');
+        photoname = '163_NP_FR1EXT3_72619.mat'; 
+        delay1 = -22;
+    end
+
+    if sess == 129
+        templicks = dlmread('163_BP_FR1EXT3_np.txt');
+        photoname = '163_BP_FR1EXT3_72619.mat';
+        delay1 = -22;
+    end
+    
+    if sess == 130
+        templicks = dlmread('vg1_M3_FR1-E1D_NP.txt');
+        photoname = 'vg1_M3_FR1-E1D.mat'; 
+        delay1 = +18;
+    end
+    
+    if sess == 131
+        templicks = dlmread('vg1_M4_FR1-E2D_NP.txt');
+        photoname = 'vg1_M4_FR1-E2D.mat'; 
+        delay1 = +18;
+    end
+    
+    if sess == 132
+        templicks = dlmread('WT_M1_FR1-NS_rew.txt');
+        photoname = 'wt_M1_FR1-NS.mat'; 
+        delay1 = +14;
+    end
+
+    if sess == 133
+        templicks = dlmread('wt_f1_FR1-NS_rew.txt');
+        photoname = 'wt_f1_FR1-NS.mat'; 
+        delay1 = +14;
+    end
+    
+    if sess == 134
+        templicks = dlmread('wt_f2_FR1-NS_rew.txt');
+        photoname = 'wt_f2_FR1-NS.mat'; 
+        delay1 = +13;
+    end
+
+    if sess == 135
+        templicks = dlmread('wt_M1_FR1-Nd_rew.txt');
+        photoname = 'wt_m1_FR1-Nd.mat'; 
+        delay1 = +13;
+    end
+    
+    if sess == 136
+        templicks = dlmread('wt_f1_FR1-Nd_rew.txt');
+        photoname = 'wt_f1_FR1-Nd.mat'; 
+        delay1 = +13;
+    end
+    
+    if sess == 137
+        templicks = dlmread('wt_f2_FR1-Nd_rew.txt');
+        photoname = 'wt_f2_FR1-Nd.mat'; 
+        delay1 = +13;
+    end
+    
+    if sess == 138
+        templicks = dlmread('WT_M1_FR1-PROB1_rew.txt');
+        photoname = 'WT_M1_FR1-PROB1.mat'; 
+        delay1 = +13;
+    end
+
+    if sess == 139
+        templicks = dlmread('WT_F1_FR1-PROB1_rew.txt');
+        photoname = 'WT_F1_FR1-PROB1.mat'; 
+        delay1 = +12;
+    end
+    
+    if sess == 140
+        templicks = dlmread('WT_F2_FR1-PROB1_rew.txt');
+        photoname = 'WT_F2_FR1-PROB1.mat'; 
+        delay1 = +13;
+    end
+    
+    if sess == 141
+        templicks = dlmread('WT_M1_FR1-PROB1_NP.txt');
+        photoname = 'WT_M1_FR1-PROB1.mat'; 
+        delay1 = +20;
+    end
+
+    if sess == 142
+        templicks = dlmread('WT_F1_FR1-PROB1_NP.txt');
+        photoname = 'WT_F1_FR1-PROB1.mat'; 
+        delay1 = +19;
+    end
+    
+    if sess == 143
+        templicks = dlmread('WT_F2_FR1-PROB1_NP.txt');
+        photoname = 'WT_F2_FR1-PROB1.mat'; 
+        delay1 = +20;
+    end
+    
+    if sess == 144
+        templicks = dlmread('WT_M1_FR1-PROB2_rew.txt');
+        photoname = 'WT_M1_FR1-PROB2.mat'; 
+        delay1 = +15;
+    end
+
+    if sess == 145
+        templicks = dlmread('WT_F1_FR1-PROB2_rew.txt');
+        photoname = 'WT_F1_FR1-PROB2.mat'; 
+        delay1 = +12;
+    end
+    
+    if sess == 146
+        templicks = dlmread('WT_F2_FR1-PROB2_rew.txt');
+        photoname = 'WT_F2_FR1-PROB2.mat'; 
+        delay1 = +13;
+    end
+    
+    if sess == 147
+        templicks = dlmread('WT_M1_FR1-PROB2_NP.txt');
+        photoname = 'WT_M1_FR1-PROB2.mat'; 
+        delay1 = +22;
+    end
+
+    if sess == 148
+        templicks = dlmread('WT_F1_FR1-PROB2_NP.txt');
+        photoname = 'WT_F1_FR1-PROB2.mat'; 
+        delay1 = +19;
+    end
+    
+    if sess == 149
+        templicks = dlmread('WT_F2_FR1-PROB2_NP.txt');
+        photoname = 'WT_F2_FR1-PROB2.mat'; 
+        delay1 = +20;
+    end
+    
+    if sess == 150
+        templicks = dlmread('WT_M1_FR1-PROB1_unrewNP.txt');
+        photoname = 'WT_M1_FR1-PROB1.mat'; 
+        delay1 = 0;
+    end
+    
+    if sess == 151
+        templicks = dlmread('WT_F1_FR1-PROB1_unrewNP.txt');
+        photoname = 'WT_F1_FR1-PROB1.mat'; 
+        delay1 = 0;
+    end
+    
+    if sess == 152
+        templicks = dlmread('WT_F2_FR1-PROB1_unrewNP.txt');
+        photoname = 'WT_F2_FR1-PROB1.mat'; 
+        delay1 = 0;
+    end
+    
+    if sess == 153
+        templicks = dlmread('WT_M1_FR1-PROB2_unrewNP.txt');
+        photoname = 'WT_M1_FR1-PROB2.mat'; 
+        delay1 = 0;
+    end
+    
+    if sess == 154
+        templicks = dlmread('WT_F1_FR1-PROB2_unrewNP.txt');
+        photoname = 'WT_F1_FR1-PROB2.mat'; 
+        delay1 = 0;
+    end
+    
+    if sess == 155
+        templicks = dlmread('WT_F2_FR1-PROB2_unrewNP.txt');
+        photoname = 'WT_F2_FR1-PROB2.mat'; 
+        delay1 = 0;
+    end
+    
+    if sess == 156
+        templicks = dlmread('VG1_M3_FR1-PROB2_unrewNP.txt');
+        photoname = 'VG1_M3_FR1-PROB2.mat'; 
+        delay1 = 0;
+    end
+    
+    if sess == 157
+        templicks = dlmread('VG1_M4_FR1-PROB2_unrewNP.txt');
+        photoname = 'VG1_M4_FR1-PROB2.mat'; 
+        delay1 = 0;
+    end
+    
+    if sess == 158
+        templicks = dlmread('VG2_f2_FR1-PROB1_rew.txt');
+        photoname = 'VG2_f2_FR1-PROB1.mat'; 
+        delay1 = +13;
+    end
+
+    if sess == 159
+        templicks = dlmread('vg2_f3_FR1-PROB1_rew.txt');
+        photoname = 'vg2_f3_FR1-PROB1.mat'; 
+        delay1 = +12;
+    end
+    
+    if sess == 160
+        templicks = dlmread('vg2_f2_FR1-PROB1_NP.txt');
+        photoname = 'vg2_f2_FR1-PROB1.mat'; 
+        delay1 = +20;
+    end
+    
+    if sess == 161
+        templicks = dlmread('vg2_f3_FR1-PROB1_NP.txt');
+        photoname = 'vg2_f3_FR1-PROB1.mat'; 
+        delay1 = +19;
+    end
+
+    if sess == 162
+        templicks = dlmread('vg2_f2_FR1-PROB2_rew.txt');
+        photoname = 'vg2_f2_FR1-PROB2.mat'; 
+        delay1 = +13;
+    end
+    
+    if sess == 163
+        templicks = dlmread('vg2_f3_FR1-PROB2_rew.txt');
+        photoname = 'vg2_f3_FR1-PROB2.mat'; 
+        delay1 = +12;
+    end
+    
+    if sess == 164
+        templicks = dlmread('vg2_f2_FR1-PROB2_NP.txt');
+        photoname = 'vg2_f2_FR1-PROB2.mat'; 
+        delay1 = +20;
+    end
+    
+    if sess == 165
+        templicks = dlmread('vg2_f3_FR1-PROB2_NP.txt');
+        photoname = 'vg2_f3_FR1-PROB2.mat'; 
+        delay1 = +19;
+    end
+    
+    if sess == 166
+        templicks = dlmread('VG2f2_FR1-PROB1_unrewNP.txt');
+        photoname = 'VG1_f2_FR1-PROB1.mat'; 
+        delay1 = 0;
+    end
+    
+    if sess == 167
+        templicks = dlmread('VG2_f3_FR1-PROB1_unrewNP.txt');
+        photoname = 'VG2_f3_FR1-PROB1.mat'; 
+        delay1 = 0;
+    end
+    
+    if sess == 168
+        templicks = dlmread('VG2_f2_FR1-PROB2_unrewNP.txt');
+        photoname = 'VG2_f2_FR1-PROB2.mat'; 
+        delay1 = 0;
+    end
+    
+    if sess == 169
+        templicks = dlmread('VG2_f3_FR1-PROB2_unrewNP.txt');
+        photoname = 'VG2_f3_FR1-PROB2.mat'; 
+        delay1 = 0;
+    end
+    
+    if sess == 170
+        templicks = dlmread('wt_M1_FR1-REV5_rew.txt');
+        photoname = 'wt_M1_FR1-REV5.mat'; 
+        delay1 = +13;
+    end
+    
+    if sess == 171
+        templicks = dlmread('wt_f1_FR1-REV5_rew.txt');
+        photoname = 'wt_f1_FR1-REV5.mat'; 
+        delay1 = +12;
+    end
+    
+    if sess == 172
+        templicks = dlmread('wt_f2_FR1-REV5_rew.txt');
+        photoname = 'wt_f2_FR1-REV5.mat'; 
+        delay1 = +14;
+    end
+    
+    
+    
+
+%%  
+
+licks1 = templicks(:,2)+delay1;
+%licks1 = templicks(:,1)+delay1;
+
+load(photoname) % load in .mat photometry file
+
+
+experDuration = floor(Dts(end));  % duration of session (seconds)
+
+pokeTimes1 = zeros(experDuration,1);
+licks1(licks1<0) =  [];
+% licks1 = licks1 - 20;
+pokeTimes1(round(licks1)) = 1;
+
+
+%%
+
+Fs = 1017.25;
+
+C1 = pokeTimes1;
+
+startdelay = 0;
+
+
+% trim photometry array to length of session
+photom1 = data1(round(Fs*startdelay)+1:round(Fs*(experDuration+startdelay)));
+time = linspace(1/Fs,experDuration,experDuration*Fs);
+
+behavior = C1;
+timeBehav = linspace(1,experDuration,length(behavior));
+ 
+    % Z score photometry data (will override dF/F)
+     photom1 = (photom1-mean(photom1))./std(photom1);
+
+for n =1
+    
+    figure(sess+300)
+    
+    plot(timeBehav,behavior+10,'g',...
+        decimate(time,1000),decimate(photom1,1000));
+    
+    ylabel('Z score                       Events per second')
+    xlabel('Time (sec)')
+    yticks([-10 -5 0 5 10 15 20 25 30 35 40])
+    yticklabels({'-10','-5','0','5','0','5','10','15','20','25','30'})
+    
+    windtop = 20;
+
+     axis([0 experDuration -5 14])
+
+end
+
+
+%% mathy math
+
+% behav1 = behavior;
+
+% if 1 second time bin is True, then flag next 20 time bins
+% for q = 1:(length(behav1)-20)
+%     
+%     if behav1(q) == 1
+%         
+%         behavior(q+1:q+20) = 1;
+%     end
+%     
+% end
+% 
+% % flag times when behavioral event starts
+% n = 1;
+% for p = 2:length(behavior)
+% 
+%     if behavior(p-1) == 0
+%         if behavior(p) == 1
+%         
+%            licks1(n) = timeBehav(p);
+%            n = n + 1; 
+%            
+%         end
+%     end
+%     
+% end
+
+
+  
+  timewindow = 40; % +/- seconds from event, determines how long to average over
+
+%% Lick triggered averaging (of photom trace)
+
+% optional: downsample photometry trace to make files smoother, smaller
+decifactor = 1; % how much to downsample (10 = 10 times fewer samples)
+photom1 = decimate(photom1,decifactor);
+time = decimate(time,decifactor);
+ 
+% update photometry sample rate with new resampled rate
+Fs = 1017.25/decifactor;
+
+samplewindow = round(timewindow*Fs); % samples per time period
+
+% remove behavior time stamps that are out of bounds!
+licks2 = licks1(licks1<(experDuration-timewindow));
+licks = licks2(licks2>timewindow);
+
+% preallocate Matrix for LickTrig
+LickTrig = zeros(length(licks),2*samplewindow);
+
+% identify which array indices are adjacent in time to behavior events
+for p = 1:length(licks)
+    
+    trigindex = zeros(1,length(photom1));
+    
+    [~,startidx] = min(abs(time-(licks(p)-timewindow)));
+    trigindex(startidx:(startidx+size(LickTrig,2)-1)) = 1;
+    
+    LickTrig(p,:) = photom1(trigindex==1);
+    
+end
+
+
+
+% re Z-score  by each trial
+
+% % pick baseline time interval (seconds relative to event)
+idxBase = [-30 -20];
+
+for pk = 1:size(LickTrig,1)
+
+    tempTrial = LickTrig(pk,:); 
+
+    baseIDX = round(size(LickTrig,2)/2+1017.25*idxBase);
+    
+    trialAVG = mean(tempTrial(baseIDX(1):baseIDX(2)));
+    trialSTD = std(tempTrial(baseIDX(1):baseIDX(2)));
+
+    
+    zTrial = (tempTrial-trialAVG)/trialSTD;
+
+    LickTrig(pk,:) = zTrial;
+
+end
+
+
+
+%%
+
+% average peri-event fluorescence
+photoPerLick = mean(LickTrig,1);
+
+% error bars
+sem = std(LickTrig,0,1)./sqrt(size(LickTrig,1)); % sem = std/sqrt(n)
+
+% event triggered average
+figure(sess)
+
+hold on
+%eb1 = errorbar(linspace(-timewindow,timewindow,length(photoPerLick)),photoPerLick,sem,'Color',[0.2,0.2,0.5]);
+x = decimate(linspace(-timewindow,timewindow,length(photoPerLick)),300);
+y = decimate(photoPerLick,300);
+eb = decimate(sem,300);
+lineProps.col{1} = 'green';
+mseb(x,y,eb,lineProps,1);
+%plot(linspace(-timewindow,timewindow,length(photoPerLick)),photoPerLick,'b')%,linspace(-timewindow,timewindow,length(photoPerLick)),LickTrig,'y')
+%legend('SEM','Mean')
+L = line([0 0],[-2 2]);
+%axis([-timewindow timewindow -1.5 1.5])
+set(L,'Color','black')
+xlabel('Peri-Event Time (sec)')
+ylabel('Z score (smoothed)')
+hold off
+
+%% heat map (x dim: time, ydim: event, zdim: deltaF/F)
+figure(sess+100)
+
+hold on
+imagesc(linspace(-timewindow,timewindow,length(photoPerLick)),1:size(LickTrig,1),LickTrig)
+L = line([0 0],[0 length(licks)+1]);
+set(L,'Color','black')
+xlabel('Peri-Event Time (sec)')
+ylabel('Bout Number')
+cb = colorbar;
+title(cb,'Z score')
+caxis([-2 2])
+%colormap(autumn)
+xlim([-timewindow timewindow])
+ylim([0 length(licks)+1])
+
+hold off
+
+%%
+
+
+% store 2D matrix from single session into big stack (combine sessions, mice)
+eventStack{k} = LickTrig;
+
+k = k + 1;
+
+end
+
+%close all
+
+%% combined plot
+
+
+superStack = cat(1,eventStack{1}); %itchStack{1},itchStack{2},itchStack{3});
+
+for p = 2:length(eventStack)
+
+    superStack = cat(1,superStack,eventStack{p});
+    
+end
+
+
+% superStack = peri-event stack for all sessions, combined
+LickTrig1 = resample(superStack',1,300)';
+
+
+photoPerLick = mean(LickTrig1,1);
+%
+
+sem = std(LickTrig1,0,1)./sqrt(size(LickTrig1,1)); % sem = std/sqrt(n)
+
+% event triggered average
+figure(61)
+
+hold on
+%eb1 = errorbar(linspace(-timewindow,timewindow,length(photoPerLick)),photoPerLick,sem,'Color',[0.2,0.2,0.5]);
+x = decimate(linspace(-timewindow,timewindow,length(photoPerLick)),1);
+y = decimate(photoPerLick,1);
+eb = decimate(sem,1);
+lineProps.col{1} = 'blue';
+mseb(x,y,eb,lineProps,1);
+%plot(linspace(-timewindow,timewindow,length(photoPerLick)),photoPerLick,'b')%,linspace(-timewindow,timewindow,length(photoPerLick)),LickTrig,'y')
+%legend('SEM','Mean')
+L = line([0 0],[-2 1]);
+axis([-timewindow timewindow -3.5 1.5])
+set(L,'Color','black')
+xlabel('Peri-Event Time (sec)')
+ylabel('Z score (smoothed)')
+hold off
+
+%print -painters -depsc 05212020vglut1wtFR1prob1rew.eps
+%% heat map (x dim: time, ydim: event, zdim: deltaF/F)
+figure(62)
+
+hold on
+imagesc(linspace(-timewindow,timewindow,length(photoPerLick)),1:size(LickTrig1,1),LickTrig1)
+L = line([0 0],[0 size(LickTrig1,1)+1]);
+set(L,'Color','black')
+xlabel('Peri-Event Time (sec)')
+ylabel('Bout Number')
+cb = colorbar;
+title(cb,'Z score')
+caxis([-3 1.5])
+%colormap(brewermap_view)
+colormap(flipud(brewermap([],'YlGnBu')))
+xlim([-timewindow timewindow])
+ylim([0 size(LickTrig1,1)+1])
+hold off
+
+%print -painters -depsc 05212020vglut1wtFR1prob1rewheat.eps
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
